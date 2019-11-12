@@ -5,7 +5,7 @@ pipeline {
     stages {
         stage('run') {
             steps {
-                sh 'ocker run --name test -it debian .'
+                sh 'docker run --name test -it debian .'
             }
         }
         stage('Back-end') {
