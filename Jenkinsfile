@@ -17,8 +17,7 @@ pipeline {
                 echo 'Building..'
                  sh 'mvn package'
             }
-        }
-		stage('Build') {
+        
            
            agent { 
                label 'slave1'
@@ -45,8 +44,7 @@ pipeline {
                 sh 'sudo cp /home/ubuntu/workspace/paramerized_pipeline1/tomcat-users.xml /etc/tomcat8/'
                 sh 'sudo service tomcat8 restart'
             }
-        }
-		stage('Deploy') {
+        
            agent { 
                label 'slave1'
             }
