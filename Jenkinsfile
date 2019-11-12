@@ -5,7 +5,7 @@ pipeline {
     stages {
         stage('run') {
             steps {
-                sh 'docker run --name test -it maven:3-alpine '
+                sh 'docker run -d maven:3-alpine'
             }
         }
         stage('Back-end') {
