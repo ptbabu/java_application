@@ -1,41 +1,25 @@
 pipeline {
    agent any
    parameters {
-        string(name: 'ENV', defaultValue: 'DEV', description: 'How should I greet the world?')
-        choice(choices: ['US-EAST-1', 'US-WEST-2'], description: 'What AWS region?', name: 'region')
-	string(name: 'ENV', defaultValue: 'PROD', description: 'How should I greet the world?')
-        choice(choices: ['US-EAST-1', 'US-WEST-2'], description: 'What AWS region?', name: 'region')
+        choice(choices: ['dev', 'prod'], description: 'What AWS region?', name: 'region')
     }
-    stages {
-       
+   
+   stages {
         stage('Build') {
            
-           agent { 
-               label 'docker'
-	       label 'slave1'
-            }
             steps {
                 echo 'Building..'
                  sh 'mvn package'
-            }
-        
-           
-            
-               
-            
-            steps {
-                echo 'Building..'
-                 sh 'mvn package'
+                 script {
+              timeout(time: 10, unit: 'MINUTES') {
+                input(id: "Deploy Gate", message: "Deploy ${params.project_name}?", ok: 'Deploy')
+              }
             }
         }
-       
+        }
    
         stage('Deploy') {
-           agent { 
-               label 'docker'
-	       label 'slave1'
-            }
-            
+           
             steps {
                 
                 sh 'sudo apt update -y'
@@ -46,12 +30,6 @@ pipeline {
                 sh 'sudo cp /home/ubuntu/workspace/paramerized_pipeline1/tomcat-users.xml /etc/tomcat8/'
                 sh 'sudo service tomcat8 restart'
             }
-        
-           
-               
-            
-            
-            
         }
     }
 }
